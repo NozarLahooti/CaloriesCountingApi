@@ -3,49 +3,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultDiv = document.getElementById("result");
 
   button.addEventListener("click", async () => {
-    
-    const recipeName = document.getElementById("foodSearch").value.trim();
+    const recipeTitle = document.getElementById("foodTitle").value.trim();
+    const ingredientsInput = document.getElementById("foodIngredients").value.trim();
 
-    if (!recipeName) {
-      resultDiv.innerText = "Please enter your recipe name!";
+    if (!recipeTitle || !ingredientsInput) {
+      resultDiv.innerText = "Please enter both recipe title and ingredients!";
       return;
     }
 
     
-    const options = {
-      method: 'POST',
-      url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/analyze',
-      params: {
-        language: 'en',
-        includeNutrition: 'false',
-        includeTaste: 'false'
-      },
-      headers: {
-        'x-rapidapi-key': '43726e468amshea40d69a22978e6p120db7jsn3f76f339f450',
-        'x-rapidapi-host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
-        'Content-Type': 'application/json'
-      },
-      data: {
-        title: recipeTitle,
-        servings: 2,
-        ingredients: [
-          '1 lb spaghetti',
-          '3.5 oz pancetta',
-          '2 Tbsps olive oil',
-          '1 egg',
-          '0.5 cup parmesan cheese'
-        ],
-        instructions: 'Bring a large pot of water to a boil and season generously with salt. Add the pasta to the water once boiling and cook until al dente. Reserve 2 cups of cooking water and drain the pasta.'
-      }
-    };
+    const ingredients = ingredientsInput.split(',').map(ing => ing.trim());
 
     try {
-      const response = await axios.request(options);
-      console.log(response.data);
-      resultDiv.innerText = JSON.stringify(response.data, null, 2);
+      const response = await axios({
+        method: 'POST',
+        url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/analyze',
+        params: {
+          language: 'en',
+          includeNutrition: 'true',  
+          includeTaste: 'false'
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-rapidapi-host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+          'x-rapidapi-key': apiKey 
+        },
+        data: {
+          title: recipeTitle,
+          servings: 2,
+          ingredients: ingredients,
+          instructions: 'Basic preparation'
+        }
+      });
+
+      const calories = response.data?.nutrition?.nutrients?.find(n => n.name === 'Calories');
+      resultDiv.innerText = calories
+        ? `Calories: ${calories.amount} ${calories.unit}`
+        : 'Calories not found.';
     } catch (error) {
       console.error(error);
-      resultDiv.innerText = "Error analyzing recipe.";
+      resultDiv.innerText = "Failed to load!";
     }
   });
 });
