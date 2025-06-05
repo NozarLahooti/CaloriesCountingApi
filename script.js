@@ -46,3 +46,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+// Using Get 
+
+const searchRecipes = async (query) => {
+  try {
+    const response = await axios.get(
+      'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch',
+      {
+        params: {
+          query: query,
+          number: 5,
+        },
+        headers: {
+          'x-rapidapi-host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
+          'x-rapidapi-key': apiKey,
+        },
+      }
+    );
+
+    const recipes = response.data.results;
+    console.log('Recipes:', recipes); 
+  } catch (error) {
+    console.error("GET request failed:", error);
+  }
+};
+
