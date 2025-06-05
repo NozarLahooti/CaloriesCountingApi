@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("CalorieNumber");
-  const searchButton = document.getElementById("searchButton");
+  const SearchButton = document.getElementById("SearchButton");
   const resultDiv = document.getElementById("result");
 
   button.addEventListener("click", async () => {
     const recipeTitle = document.getElementById("foodTitle").value.trim();
-    const ingredientsInput = document.getElementById("foodIngredients").value.trim();
+    const ingredientsInput = document
+      .getElementById("foodIngredients")
+      .value.trim();
 
     if (!recipeTitle || !ingredientsInput) {
       resultDiv.innerText = "Please enter both recipe title and ingredients!";
@@ -25,7 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         headers: {
           "Content-Type": "application/json",
-          "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+          "x-rapidapi-host":
+            "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
           "x-rapidapi-key": apiKey,
         },
         data: {
@@ -59,7 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
             number: 5,
           },
           headers: {
-            "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+            "x-rapidapi-host":
+              "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
             "x-rapidapi-key": apiKey,
           },
         }
@@ -67,6 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const recipes = response.data.results;
       console.log("Recipes:", recipes);
+      const recipeList = recipes.map((r) => r.title);
+      resultDiv.innerHTML = recipeList
+        .map((item) => `<div class="list-item">${item}</div>`)
+        .join("");
     } catch (error) {
       console.error("GET request failed:", error);
     }
@@ -76,8 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const userClick = document.getElementById("foodTitle").value.trim();
 
     if (!userClick) {
-      resultDiv.innerText = "Please enter a recipe title to search!"
-      return
+      resultDiv.innerText = "Please enter a recipe title to search!";
+      return;
     }
 
     searchRecipes(userClick);
