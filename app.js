@@ -1,3 +1,5 @@
+import { apiKey } from "./config";
+
 async function myTest (q , page =  1, limit = 3 ) {
     const url = 'https://jsonplaceholder.typicode.com/posts';
     const response = await fetch(url);

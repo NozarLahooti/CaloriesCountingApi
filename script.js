@@ -1,3 +1,5 @@
+import { apiKey } from "./config.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("CalorieNumber");
   const SearchButton = document.getElementById("SearchButton");
